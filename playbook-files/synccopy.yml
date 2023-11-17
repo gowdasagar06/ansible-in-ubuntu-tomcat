@@ -1,0 +1,7 @@
+- name: Synchronize files with remote hosts
+  hosts: web
+  tasks:
+    - name: Synchronize a directory
+      synchronize:
+        src: /home/ubuntu/ansible/
+        dest: /home/ubuntu/gowda

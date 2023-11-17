@@ -1,0 +1,7 @@
+---
+- name: Run a Command on Web Servers
+  hosts: web
+  tasks:
+    - name: Run the 'uptime' command
+      command: uptime
+

@@ -1,0 +1,7 @@
+- name: Install a package on Debian/Ubuntu
+  hosts: web
+  tasks:
+    - name: Install Apache2
+      apt:
+        name: apache2
+        state: present

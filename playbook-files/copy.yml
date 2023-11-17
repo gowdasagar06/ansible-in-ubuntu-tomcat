@@ -1,0 +1,7 @@
+- name: Copy a file to remote hosts
+  hosts: web
+  tasks:
+    - name: Transfer a file
+      copy:
+        src: /home/ubuntu/ansible/
+        dest: /home/ubuntu/sagar/

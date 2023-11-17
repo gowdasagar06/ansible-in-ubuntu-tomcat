@@ -1,0 +1,82 @@
+---
+# tasks file for tomcat
+
+- name: Update apt package cache
+  apt:
+    update_cache: yes
+      #become: yes
+
+- name: Install OpenJDK
+  apt:
+    name: openjdk-8-jdk
+    state: present
+      #become: yes
+
+- name: Add Tomcat group
+  group:
+    name: "{{ tomcat_group }}"
+      #become: yes
+
+- name: Add Tomcat user
+  user:
+    name: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    home: "{{ tomcat_install_path }}"
+    shell: /bin/false
+    system: yes
+  become: yes
+
+- name: Download Tomcat
+  get_url:
+    url: "{{ tomcat_download_url }}"
+    dest: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
+  become: yes
+
+- name: Create Tomcat directory
+  file:
+    path: "{{ tomcat_install_path }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  become: yes
+
+- name: Extract Tomcat archive
+  ansible.builtin.unarchive:
+    src: "/tmp/apache-tomcat-{{ tomcat_version }}.tar.gz"
+    dest: "{{ tomcat_install_path }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    remote_src: yes
+    creates: "{{ tomcat_install_path }}/apache-tomcat-{{ tomcat_version }}/bin"
+  become: yes   
+
+- name: Set environment variables for Tomcat
+  lineinfile:
+    path: "/etc/environment"
+    line: "CATALINA_HOME={{ tomcat_install_path }}/apache-tomcat-{{ tomcat_version }}"
+  become: yes
+
+- name: Create Tomcat systemd service file
+  template:
+    src: "templates/tomcat.service.j2"
+    dest: "/etc/systemd/system/tomcat.service"
+  become: yes
+
+- name: Set execute permission for startup.sh
+  ansible.builtin.file:
+    path: "{{ tomcat_install_path }}/apache-tomcat-{{ tomcat_version }}/bin/"
+    mode: "+x"
+  become: yes    
+
+- name: Reload systemd to recognize the new service
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: Start and enable Tomcat service
+  systemd:
+    name: tomcat
+    state: started
+    enabled: yes
+  become: yes
+

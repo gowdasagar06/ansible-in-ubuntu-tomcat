@@ -1,0 +1,9 @@
+---
+# vars file for tomcat
+# vars.yml
+
+tomcat_version: "9.0.83"  # Replace with the desired Tomcat version
+tomcat_install_path: "/opt/tomcat"
+tomcat_user: "tomcat"
+tomcat_group: "tomcat"
+tomcat_download_url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.83/bin/apache-tomcat-9.0.83.tar.gz"

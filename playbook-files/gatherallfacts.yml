@@ -1,0 +1,9 @@
+---
+- name: Gather and use facts
+  hosts: web
+  gather_facts: yes  # Ensure this line is present
+  tasks:
+    - name: Display the operating system
+      debug:
+        msg: "The OS on {{ inventory_hostname }} is {{ ansible_facts['ansible_distribution'] }}"
+

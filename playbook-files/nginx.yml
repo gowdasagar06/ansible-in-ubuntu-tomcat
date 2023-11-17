@@ -1,0 +1,25 @@
+---
+- name: Install Nginx on Ubuntu
+  hosts: web
+  become: true  # Run tasks with elevated privileges (sudo)
+
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start Nginx service
+      service:
+        name: nginx
+        state: started
+
+    - name: Enable Nginx to start on boot
+      systemd:
+        name: nginx
+        enabled: yes
+
